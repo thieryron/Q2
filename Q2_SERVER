@@ -1,0 +1,30 @@
+Import socket
+
+#fahrenheit to celsius function
+def fahrenheit_to_celsius(fahrenheit):
+celsius = (fahrenheit - 32) * (5/9)
+return celsius 
+
+#create socket
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+#bind to host
+server_socket.bind(‘192.168.100.209’, 8000)
+
+#listen for connection
+server_socket.listen(1)
+print(“Fetching connections….”)
+
+while True:
+#establish connection
+connection, address = server_socket.accept()
+print(“connected!”)
+
+temperature_in_fahrenheit = connection.recv(1024).decode()
+temperature_in_fahrenheit = float(temperature_in_fahrenheit)
+temperature_in_celsius = fahrenheit_to_celsius(temperature_in_fahrenheit)
+connection.send(str(temperature_in_celsius).encode())
+
+#close connection
+connection.close()
+
